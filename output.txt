@@ -1,0 +1,6 @@
+The answer
+to the last
+quustion of
+the seicond quiz
+wi be "GoLang".
+

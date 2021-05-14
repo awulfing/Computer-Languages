@@ -1,0 +1,80 @@
+import 'dart:html';
+import 'dart:math';
+import 'dart:async';
+
+CanvasElement canvas;
+CanvasRenderingContext2D ctx;
+var ball = new Ball(20);
+
+//ball 
+class Ball {
+  int rad;
+  double x = 50;
+  double y = 50;
+  double vx = 0;
+  double vy = 0;
+  num _lastTimeStamp = 0;
+  static const num GAME_SPEED = 1;
+  Ball(this.rad);
+  Future run() async {
+    update(await window.animationFrame);
+  }
+  
+  void update(num delta) {
+    final num diff = delta - _lastTimeStamp;
+
+    if (diff > GAME_SPEED) {
+      _lastTimeStamp = delta;
+      clear();
+      fall();
+    }
+    run();
+  }
+
+  void fall() {
+    //1 apply velocity to position
+    x += vx;
+    y += vy;
+    //2 add drag
+    vx *= 0.99;
+    vy *= 0.99;
+    //3 apply gravity to velocity
+    vx += .25;
+    vy += .25;
+    //check for colisions
+    if (x + rad > canvas.width) {
+      x = canvas.width - rad * 1.0;
+      vx *= (-1);
+    }
+    if (y + rad > canvas.height) {
+      y = canvas.height - rad * 1.0;
+      vy *= (-1);
+    }
+    //draw ball
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.rad, 0, 2 * pi);
+    ctx..fillStyle = "yellow";
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+void main() {
+  canvas = querySelector('#canvas');
+  ctx = canvas.getContext('2d');
+  querySelector('#canvas').onClick.listen(moveBall);
+  ball.run();
+}
+
+//clear display
+void clear() {
+  ctx..fillStyle = "purple";
+  ctx..fillRect(0, 0, canvas.width, canvas.height);
+}
+
+void moveBall(MouseEvent event) {
+  clear();
+  Point coords = event.client;
+  ball.x = coords.x;
+  ball.y = coords.y;
+}

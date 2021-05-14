@@ -1,0 +1,17 @@
+box {
+  width: 450px;
+  height: 450px;
+  margin: auto;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#canvas {
+  background-color:purple;
+  border:solid thin purple;
+}
